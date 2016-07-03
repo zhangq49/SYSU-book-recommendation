@@ -1,0 +1,17 @@
+<a href="/">Logo</a>
+
+
+<h1>所有标签页面</h1>
+
+
+标签分类<br>
+{% for label in allLabelList %}
+<a href="/book-label/{{ label }}">{{ label }}</a>
+{% end %}
+
+
+分页： 当前页{{ curPage }}<br>
+{% for page in range(1, totalPage + 1) %}
+<a href="/book-label?page={{ page }}
+">{{ page }}</a>
+{% end %}	

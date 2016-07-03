@@ -1,0 +1,36 @@
+<a href="/">Logo</a>
+
+<h1>主页</h1>
+
+热门<br>	
+{% for book in popularBookList %}
+<div>
+	<a href="/book/{{ book[0]}} ">{{ book[1] }}</a>
+	<img src="{{ book[2] }}">
+</div>
+{% end %}
+<br><br>
+推荐<br>
+
+{% for book in recommendBookList %}
+<div>
+	<a href="/book/{{ book[0]}} ">{{ book[1] }}</a>
+	<img src="{{ book[2] }}">
+</div>	
+{% end %}
+
+
+
+<br><br>
+<a href="/book-label?p=1">标签分类</a><br>
+{% for label in popularLabelList %}
+<a href="/book-label/{{ label }}">{{ label }}</a>
+{% end %}
+<br>
+
+
+
+<form action='/search-result?page=1'>
+    <input type="text" name="bookName" maxlength="15" required>
+	<input type="submit" value="搜索" />
+</form>

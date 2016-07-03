@@ -1,0 +1,28 @@
+<a href="/">Logo</a>
+<h1>书籍信息页面</h1>
+
+
+<P>书名：{{ bookName }}</P>
+<img src="{{ bookPicURL }}">
+<p>作者：{{ author }}</p>
+<p>出版社：{{ press }}</p>
+<p>豆瓣评分：{{ score }}</p>
+<p>评分人数：{{ scoreNumber }}</p>
+<p>内容简介：{{ introduction }}</p>
+<p>作者简介：{{ authorIntro }}</p>
+<p><a href="{{ sysuBookURL }}">中大借阅</a></p>
+
+相似书籍br	
+{% for book in relatedBookList%}
+<div>
+	<a href="/book/{{ book[0]}} ">{{ book[1] }}</a>
+	<img src="{{ book[2] }}">
+</div>	
+{% end %}
+
+
+<br>
+<a href="/book-label?p=1">标签分类</a><br>
+{% for label in popularLabelList %}
+<a href="/book-label/{{ label }}">{{ label }}</a>
+{% end %}
