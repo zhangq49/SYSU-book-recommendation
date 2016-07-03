@@ -1,0 +1,24 @@
+<a href="/">Logo</a>
+
+<h1>某类图书页面</h1>
+
+{% for book in labelBookList%}
+<div>
+	<a href="/book/{{ book[0]}} ">{{ book[1] }}</a>
+	<img src="{{ book[2] }}">
+</div>	
+{% end %}
+
+
+分页： 当前页{{ curPage }}
+{% for page in range(1, totalPage + 1) %}
+<a href="/book-label/{{ name }}?page={{ curPage }}
+">{{ page }}</a>
+{% end %}	
+
+<br><br>
+<a href="/book-label?p=1">标签分类</a><br>
+{% for label in popularLabelList %}
+<a href="/book-label/{{ label }}">{{ label }}</a>
+{% end %}
+<br>
