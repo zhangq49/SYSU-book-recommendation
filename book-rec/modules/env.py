@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 '''
-If current working directory is /home/roger, we are on development mode.
+If current working directory starts with /home/roger, we are on development mode.
 '''
 import sys
 plist = sys.path[0].split('/')
