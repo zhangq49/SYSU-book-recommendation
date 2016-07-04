@@ -87,8 +87,38 @@ def getRelevantBooks(bookUid, cur, conn):
 
 @mysqlConn
 def getBooksByLabel(labelName, page, size, order, cur, conn):
-    pass
+    # get labelUid
+    sql = '''select uid from bookLabel where name = %s'''
+    cur.execute(sql, labelName)
+    labelUid = cur.fetchone()[0]
+    if not labelUid:
+        # labelName doesn't exist.
+        return []
+    sql = '''select book.id, book.name, book.imgUrl from labelOfBook inner join
+        book on book.uid = labelOfBook.bookUid where labelOfBook.bookLabelUid =
+        %s '''
+    num = cur.execute(sql, labelUid)
+    records = cur.fetchmany(num)
+    books = []
+    for rec in records:
+        books.append(Book(rec[0], rec[1], rec[2]))
+    return books
 
 @mysqlConn
 def incBookViewCount(userToken, bookUid, cur, conn):
-    pass
+    # Assume bookUid is valid.
+    sql = '''select uid from user where token = %s'''
+    cur.execute(sql, userToken)
+    userUid = cur.fetchone()[0]
+    sql = '''select viewCount from userBookView where userUid = %s and 
+        bookUid = %s'''
+    cur.execute(sql, (userUid, bookUid))
+    record = cur.fetchone()
+    if not record:
+        sql = '''insert into userBookView(userUid, bookUid, viewCount)
+            values(%s, %s, 1)'''
+    else:
+        sql = '''update userBookView set viewCount = viewCount + 1 
+            where userUid = %s and bookUid = %s'''
+    cur.execute(sql, (userUid, bookUid))
+    conn.commit()
