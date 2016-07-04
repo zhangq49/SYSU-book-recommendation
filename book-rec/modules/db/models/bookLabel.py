@@ -2,6 +2,7 @@
 
 class BookLabel(object):
     """Model for BookLabel"""
-    def __init__(self, content):
+    def __init__(self, name, useCount):
         super(BookLabel, self).__init__()
-        self.content = content
+        self.name = name
+        self.useCount = useCount
