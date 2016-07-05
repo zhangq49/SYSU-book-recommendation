@@ -1,0 +1,147 @@
+html {
+    font-size: 100%;
+}
+
+body {
+    background-color: #e7e7e7;
+    font-family: "Hiragino Sans GB","Microsoft YaHei","微软雅黑",tahoma,arial,simhei,"黑体";
+    font-size: 0.938rem;
+    overflow: scroll;
+}
+
+.left {
+}
+
+.content{
+    width: 720px;
+    margin: 0 auto;
+}
+
+.hot, .recommendation, .bookDetail, .similar{
+    border-radius: 5px;
+    width: 100%;
+    background-color: white;
+    margin-bottom: 20px;
+}
+
+.hotHeader, .recHeader, .labelsHeader, .detailHeader, .similarHeader, .pageHeader {
+    padding: 10px;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+}
+
+.hotContent, .recContent, .detailContent, .similarContent {
+    padding: 20px;
+}
+
+.hotBooks, .recBooks, .similarBooks {
+    float: left;
+    margin: 0 20px 5px 0;
+    width: 150px;
+    height: 245px;
+
+}
+
+.hotBooks img, .recBooks img, .similarBooks img {
+    width: 100%;
+    height: 197px;
+}
+
+.hotBooks a, .recBooks a, .similarBooks a {
+    color: #333;
+    overflow: hidden;
+    display: inline-block;
+    height: 42px;
+}
+
+.right {
+}
+
+.hotLabels {
+    width: 350px;
+    background-color: white;
+    border-radius: 5px;
+    /*float: left;*/
+}
+
+.labelsHeader {
+    margin-bottom: 15px;
+}
+
+.label-item {
+    display: inline-block;
+    margin: 0px 7px 15px 7px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: #333;
+}
+
+@media screen and (max-width: 1130px) {
+    .content, .hotLabels {
+        width: 100% !important;
+    }
+}
+
+/*-------------------------------------------------book.html---------------------------------------*/
+.detailContent img {
+    width: 200px;
+    height: auto;
+    float: left;
+    margin-right: 20px;
+}
+
+.describe {
+    float: left;
+}
+
+@media screen and (max-width: 286px) {
+    .detailContent img {
+        width: 100%;
+    }
+}
+
+/*----------------------------------------------singleBookLabel.html----------------------------------*/
+.pages {
+    background-color: white;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.pageContent {
+    padding: 10px;
+}
+
+.pageContent a {
+    display: inline-block;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    padding: 3px;
+}
+
+
+/*-----------------------------------------------allBookLabel.html------------------------------------*/
+.main {
+    width: 900px;
+    margin: 0 auto;
+}
+
+.allLabels {
+    width: 100%;
+    background-color: white;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+@media screen and (max-width: 932px) {
+    .main {
+        width: 100% !important;
+    }
+}
+
+/*---------------------------------------------404.html----------------------------------------*/
+.content404 {
+    width: 240px;
+    font-size: 2rem;
+    margin: 150px auto;
+}
