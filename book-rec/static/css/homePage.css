@@ -105,6 +105,7 @@ body {
 .pages {
     background-color: white;
     border-radius: 5px;
+    margin-bottom: 20px;
 }
 
 .pageContent {
@@ -136,4 +137,11 @@ body {
     .main {
         width: 100% !important;
     }
+}
+
+/*---------------------------------------------404.html----------------------------------------*/
+.content404 {
+    width: 240px;
+    font-size: 2rem;
+    margin: 150px auto;
 }

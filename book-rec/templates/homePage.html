@@ -32,9 +32,9 @@
         <li class="active"><a href="./homePage.html">主页<span class="sr-only">(current)</span></a></li>
         <li><a href="./allBookLabel.html">分类</a></li>
       </ul>
-      <form class="navbar-form navbar-left" role="search">
+      <form class="navbar-form navbar-left" role="search" action='/search-result?page=1'>
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="搜索书籍">
+          <input type="text" class="form-control" placeholder="搜索书籍" required>
         </div>
         <button type="submit" class="btn btn-default">搜索</button>
       </form>
@@ -53,14 +53,16 @@
                     <div class="hot">
                         <div class="hotHeader">热门书籍</div>
                         <div class="hotContent">
+                            {% for book in popularBookList %}
                             <div class="hotBooks">
+                                <img src="{{ book[2] }}" alt="Hot Book">
+                                <a href="/book/{{ book[0]}} ">{{ book[1] }}</a>
+                            </div>
+                            {% end %}
+                            <!-- <div class="hotBooks">
                                 <img src="../static/images/book0.jpg" alt="Hot Book">
                                 <a href="#">book name</a>
-                            </div>
-                            <div class="hotBooks">
-                                <img src="../static/images/book0.jpg" alt="Hot Book">
-                                <a href="#">book name</a>
-                            </div>
+                            </div> -->
                         </div>
                         <div style="clear:both"></div>
                     </div>
@@ -68,14 +70,16 @@
                     <div class="recommendation">
                         <div class="recHeader">推荐书籍</div>
                         <div class="recContent">
+                            {% for book in recommendBookList %}
                             <div class="recBooks">
+                                <img src="{{ book[2] }}" alt="Recommendation">
+                                <a href="/book/{{ book[0]}}">{{ book[1] }}</a>
+                            </div>
+                            {% end %}
+                            <!-- <div class="recBooks">
                                 <img src="../static/images/book1.jpg" alt="Recommendation">
                                 <a href="#">book name</a>
-                            </div>
-                            <div class="recBooks">
-                                <img src="../static/images/book1.jpg" alt="Recommendation">
-                                <a href="#">book name</a>
-                            </div>
+                            </div> -->
                         </div>
                         <div style="clear:both"></div>
                     </div>
@@ -86,16 +90,16 @@
                 <div class="hotLabels">
                     <div class="labelsHeader">热门标签</div>
                     <div class="labelsContent">
-                        <a href="#" class="label-item">小说</a>
-                        <a href="#" class="label-item">散文</a>
+                        {% for label in popularLabelList %}
+                        <a href="/book-label/{{ label }}" class="label-item">{{ label }}</a>
+                        {% end %}
+                        <!-- <a href="#" class="label-item">散文</a>
                         <a href="#" class="label-item">漫画</a>
                         <a href="#" class="label-item">历史</a>
                         <a href="#" class="label-item">哲学</a>
                         <a href="#" class="label-item">心理</a>
                         <a href="#" class="label-item">互联网</a>
-                        <a href="#" class="label-item">编程</a>
-                        <a href="#" class="label-item">gsrg sfgf adf dg sfdg sfdg sdfg sfg aerg gr sfdg sfd sdfg sdfg sf sfd</a>
-                        <a href="#" class="label-item">adf adf adf adf dg sfdg sfdg sdfg</a>
+                        <a href="#" class="label-item">编程</a> -->
                     </div>
                 </div>
             </div>
