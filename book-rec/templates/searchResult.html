@@ -1,25 +1,99 @@
-<a href="/">Logo</a>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>Search Result</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
 
-<h1>搜索结果页面</h1>
-{% for book in searchResultBookList %}
-<div>
-	<a href="/book/{{ book[0]}} ">{{ book[1] }}</a>
-	<img src="{{ book[2] }}">
-</div>	
-{% end %}
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
 
-分页： 当前页{{ curPage }}
-{% for page in range(1, totalPage + 1) %}
-<a href="/search-result?searchString={{ searchString }}&page={{ page }}
-">{{ page }}</a>
-{% end %}	
+    <link rel="stylesheet" type="text/css" href="../static/css/homePage.css">
+</head>
 
+<body>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">LOGO</a>
+    </div>
 
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="./homePage.html">主页<span class="sr-only">(current)</span></a></li>
+        <li><a href="./allBookLabel.html">分类</a></li>
+      </ul>
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="搜索书籍">
+        </div>
+        <button type="submit" class="btn btn-default">搜索</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <!-- <li><a href="#">Link</a></li> -->
+      </ul>
+    </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
 
-<br><br>
-<a href="/book-label?p=1">标签分类</a><br>
-{% for label in popularLabelList %}
-<a href="/book-label/{{ label }}">{{ label }}</a>
-{% end %}
-<br>
+    <div class="container-fluid">
+        <div class="row">
 
+            <div class="left col-md-8">
+                <div class="content">
+                    <div class="hot">
+                        <div class="hotHeader">搜索结果</div>
+                        <div class="hotContent">
+                          {% for book in searchResultBookList %}
+                            <div class="hotBooks">
+                                <img src="{{ book[2] }}" alt="Hot Book">
+                                <a href="/book/{{ book[0] }}">{{ book[1] }}</a>
+                            </div>
+                          {% end %}
+                        </div>
+                        <div style="clear:both"></div>
+                    </div>
+
+                    <div class="pages">
+                      <div class="pageHeader">分页：当前页{{ curPage }}</div>
+                      <div class="pageContent">
+                        {% for page in range(1, totalPage + 1) %}
+                          <a href="/book-label/{{ name }}?page={{ curPage }}">{{ page }}</a>
+                        {% end %}
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right col-md-4">
+                <div class="hotLabels">
+                    <div class="labelsHeader">热门标签</div>
+                    <div class="labelsContent">
+                        <a href="#" class="label-item">小说</a>
+                        <a href="#" class="label-item">散文</a>
+                        <a href="#" class="label-item">漫画</a>
+                        <a href="#" class="label-item">历史</a>
+                        <a href="#" class="label-item">哲学</a>
+                        <a href="#" class="label-item">心理</a>
+                        <a href="#" class="label-item">互联网</a>
+                        <a href="#" class="label-item">编程</a>
+                        <a href="#" class="label-item">gsrg sfgf adf dg sfdg sfdg sdfg sfg aerg gr sfdg sfd sdfg sdfg sf sfd</a>
+                        <a href="#" class="label-item">adf adf adf adf dg sfdg sfdg sdfg</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
