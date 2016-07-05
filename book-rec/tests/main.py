@@ -9,7 +9,8 @@ print(sys.path[0])
 
 
 def main():
-    from dbhelper import bookTest
+    from dbhelper import bowokTest
+    from dbhelper import bookLabelTest
 
 if __name__ == '__main__':
     main()

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from modules.db.models.book import BookLabel
-from models.db.helper import mysqlConn
+from modules.db.models.bookLabel import BookLabel
+from modules.db.helper import mysqlConn
 
 @mysqlConn
-def getLabels(page=0, size=20, order='useCount', cur, conn):
+def getLabels(page=0, size=20, order='useCount', cur=None, conn=None):
     if order not in ['useCount']:
         order = 'useCount'
     startIndex = page * size
