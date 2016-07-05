@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
 class Book(object):
-    """Model for Book"""
+    """Model for Book
+    
+    The attribute {labels} is a list of string. eg. ['book', 'music', 'food']
+    """
     def __init__(self, name, imgUrl,
       isbn='', author='', press='', doubanPoint=0, doubanRateSum=0,
       bookDescription='', authorDescription='', sysuLibUrl='',
-      labels):
+      labels=[]):
         super(Book, self).__init__()
         # Majar infomations
         self.name = name
@@ -19,5 +22,5 @@ class Book(object):
         self.bookDescription = bookDescription
         self.authorDescription = authorDescription
         self.sysuLibUrl = sysuLibUrl
+        #
         self.labels = labels
-
