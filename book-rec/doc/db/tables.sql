@@ -1,6 +1,7 @@
-CREATE DATABASE bookrec IF NOT EXISTS
-DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE bookrec 
+DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 # using utfmb4 to include emoji character.
+use bookrec;
 
 CREATE TABLE book(
     uid INT primary key auto_increment,
@@ -16,28 +17,32 @@ CREATE TABLE book(
     sysuLibUrl VARCHAR(200),
     #
     relevantBooks VARCHAR(300)
-) DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARSET=utf8;
 
 CREATE TABLE bookLabel(
     uid INT primary key auto_increment,
     name VARCHAR(200) NOT NULL,
     useCount INT DEFAULT 1
-) DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARSET=utf8;
 
 CREATE TABLE labelOfBook(
     bookUid INT NOT NULL,
-    bookLabelUid INT NOT NULL
-) DEFAULT CHARSET=utf8mb4;
+    bookLabelUid INT NOT NULL,
+    foreign key(bookUid) references book(uid),
+    foreign key(bookLabelUid) references bookLabel(uid)
+) DEFAULT CHARSET=utf8;
 
 CREATE TABLE user(
     uid INT primary key auto_increment,
     token VARCHAR(100) NOT NULL,
     recBooks VARCHAR(300)
-) DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARSET=utf8;
 
 CREATE TABLE userBookView(
     userUid INT NOT NULL,
     bookUid INT NOT NULL,
-    viewCount INT DEFAULT 1
-) DEFAULT CHARSET=utf8mb4;
+    viewCount INT DEFAULT 1,
+    foreign key(userUid) references user(uid),
+    foreign key(bookUid) references book(uid)
+) DEFAULT CHARSET=utf8;
 
