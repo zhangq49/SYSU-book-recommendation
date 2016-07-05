@@ -4,6 +4,9 @@ import re
 from book import Book
 from bs4 import BeautifulSoup
 import bs4
+import json
+
+bookUrlList = list()
 
 #Get a page through its url
 def getHtml(url):
@@ -87,6 +90,10 @@ def getBookInf(book):
     
     if not 'ISBN' in bookInf:
         return
+    if not '出版社' in bookInf:
+        bookInf['出版社'] = ''
+    if not '作者' in bookInf:
+        bookInf['作者'] = ''
 
     bookItem = Book(uid = -1,
                     name = bookInf['书名'],
@@ -100,33 +107,50 @@ def getBookInf(book):
                     authorDesciption = bookInf['作者简介'],
                     sysuLibUrl='')
     printBook(bookItem)
-    
+
+
+
+def getBookJsonFromId(Id):
+    return json.loads(getHtml('https://api.douban.com/v2/book/' + str(Id)))
+
+def getIdFromUrl(url):
+    sub = url.split('/')
+    return sub[-2]
+
 def getTagInf(tag):
     index = 0
     while(1):
         html = getHtml("https://book.douban.com/tag/" + tag.encode('UTF-8') + "?start=" + str(index*20))
         index = index + 1
         print 'index:' + str(index) + '###########'
-        #print ("https://book.douban.com/tag/" + tag.encode('UTF-8') + "?start=" + str(index*20))
         soup = BeautifulSoup(html)
-        x = 0
+        if soup.find('div', id = 'subject_list').find('p').text.encode('UTF-8') == '没有找到符合条件的图书':
+            print "Search done"
+            break
         for book in soup.find_all("a", href=re.compile("^https://book.douban.com/subject"), class_ = "nbg"):
-            if x % 2 == 0:
-                print book['href']
-                getBookInf(book['href'])
-            x = x + 1
+            print book['href']
+            bookUrlList.append(book['href'])
+            #getBookInf(book['href'])
 
+
+##Search given tag and get book list
 def searchTagList():
     tagList = getTagList()
     for tag in tagList:
-        getInf("小说")
+        print '======================' + tag.encode('UTF-8') + '========================='
+        getTagInf(tag)
 
+#Just for test
 def test():
-    tag = getTagList()[0]
-    getTagInf(tag)
+    searchTagList()
 
+testBook = getHtml("https://api.douban.com/v2/book/25862578")
+print testBook
+bookJson = json.loads(testBook)
+print bookJson['rating']
 
 test()
+
 
 
 
