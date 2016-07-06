@@ -12,6 +12,11 @@ from getBookInfo import *
 from getBookByLabel import *
 from recordVisit import *
 
+from modules.db.helper import book
+from modules.db.helper import bookLabel
+
 searchBookCountPerPage = 10
 LabelCountPerPage = 10
 LabelBookCountPerPage = 10
+quantityOfPopularBook = 10
+

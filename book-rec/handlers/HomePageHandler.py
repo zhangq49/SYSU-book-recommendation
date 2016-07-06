@@ -7,6 +7,8 @@ class HomePageHandler(BaseHandler):
         try:
             cookie = super(HomePageHandler, self).get_current_user()
             
+            # popularBookList = book.getPopularBooks(quantityOfPopularBook)
+            # recommendBookList = book.getRecommendedBooks(cookie)
             popularBookList = getPopularBook()
             recommendBookList = getRecommendBook(cookie)
             popularLabelList = getPopularLabel()
