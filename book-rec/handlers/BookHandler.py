@@ -20,19 +20,21 @@ class BookHandler(BaseHandler):
         introduction = bookDetail.bookDescription
         authorIntro = bookDetail.authorDescription
         sysuBookURL = bookDetail.sysuLibUrl
-
+        isbn = bookDetail.isbn
         books = book.getRelevantBooks(id)
         relatedBookList = formatToBookList(books)
         
         bookLabels = bookLabel.getLabels(0, sizeOfGetLabelsMethod)
         popularLabelList = formatToPopularLabelList(bookLabels)
 
+        name = ['等待数据库API修改',]
+
         self.render('book.html',
             bookName=bookName, bookPicURL=bookPicURL,
             author=author, press=press, score=score, scoreNumber=scoreNumber,
             introduction=introduction, authorIntro=authorIntro,
             sysuBookURL=sysuBookURL, relatedBookList=relatedBookList,
-                popularLabelList=popularLabelList)
+                popularLabelList=popularLabelList, isbn=isbn, name=name)
 
 
     def post(self):
