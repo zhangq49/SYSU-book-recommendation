@@ -69,11 +69,20 @@ def main():
     books = bookHelper.getBooksByLabel('nolabel', 0, 2)
     printBookSimple(books)
 
-    print 'incBookViewCount'
-    bookHelper.incBookViewCount('olduser', 1)
-    bookHelper.incBookViewCount('newuser', 1)
-    bookHelper.incBookViewCount('olduser', 1)
-    bookHelper.incBookViewCount('newuser', 2)
-    bookHelper.incBookViewCount('no-user', 1)
+    # print 'incBookViewCount'
+    # bookHelper.incBookViewCount('olduser', 1)
+    # bookHelper.incBookViewCount('newuser', 1)
+    # bookHelper.incBookViewCount('olduser', 1)
+    # bookHelper.incBookViewCount('newuser', 2)
+    # bookHelper.incBookViewCount('no-user', 1)
+
+    print '-'*40
+    print 'getBookSum'
+    print bookHelper.getBookSum()
+
+    print '-'*40
+    print bookHelper.getBookSumOfLabel('dygw')
+    print bookHelper.getBookSumOfLabel('label2')
+    print bookHelper.getBookSumOfLabel('label3')
 
 main()

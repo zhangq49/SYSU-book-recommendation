@@ -16,3 +16,11 @@ def getLabels(page=0, size=20, order='useCount', cur=None, conn=None):
     for rec in records:
         bookLabels.append(BookLabel(rec[0], rec[1]))
     return bookLabels
+
+@mysqlConn
+def getLabelSum(cur, conn):
+    sql = '''select count(*) from bookLabel'''
+    cur.execute(sql)
+    labelSum = cur.fetchone()[0]
+    return labelSum
+

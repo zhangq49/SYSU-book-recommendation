@@ -132,3 +132,21 @@ def incBookViewCount(userToken, bookUid, cur, conn):
             where userUid = %s and bookUid = %s'''
     cur.execute(sql, (userUid, bookUid))
     conn.commit()
+
+@mysqlConn
+def getBookSum(cur, conn):
+    sql = '''select count(*) from book'''
+    cur.execute(sql)
+    bookSum = cur.fetchone()[0]
+    return bookSum
+
+@mysqlConn
+def getBookSumOfLabel(labelName, cur, conn):
+    # sql = '''select count(*) from labelOfBook inner join bookLabel 
+    #       on labelOfBook.bookLabelUid = bookLabel.uid
+    #       where bookLabel.name = %s'''
+    sql = '''select useCount from bookLabel where name = %s'''
+    cur.execute(sql, labelName)
+    bookSum = cur.fetchone()[0]
+    return bookSum
+

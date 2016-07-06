@@ -10,8 +10,8 @@ print(sys.path[0])
 
 def main():
     from dbhelper import bookTest
-    from dbhelper import bookLabelTest
-    from dbhelper import userTest
+    # from dbhelper import bookLabelTest
+    # from dbhelper import userTest
 
 if __name__ == '__main__':
     main()
