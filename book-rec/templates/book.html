@@ -61,6 +61,12 @@
                           <p>评分人数：{{ scoreNumber }}</p>
                           <p>内容简介：{{ introduction }}</p>
                           <p>作者简介：{{ authorIntro }}</p>
+                          <p>ISBN：{{ isbn }}</p>
+                          <p>
+                            {% for label in bookLabels %}
+                            <a href="/book-label/{{ label }}" class="label-item">{{ label }}</a>
+                            {% end %}
+                          </p>
                           <p><a href="{{ sysuBookURL }}">中大借阅</a></p>
                         </div>
                         <div style="clear:both"></div>
