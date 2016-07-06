@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="pages">
-                      <div class="pageHeader">分页：当前页{{ curPage }}</div>
+                      <div class="pageHeader">当前页: {{ curPage }}</div>
                       <div class="pageContent">
                         {% for page in range(1, totalPage + 1) %}
                           <a href="/book-label/{{ name }}?page={{ page }}">{{ page }}</a>
