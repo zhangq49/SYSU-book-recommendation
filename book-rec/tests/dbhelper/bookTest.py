@@ -85,4 +85,8 @@ def main():
     print bookHelper.getBookSumOfLabel('label2')
     print bookHelper.getBookSumOfLabel('label3')
 
+    print '-'*40 
+    print 'getBookLabels'
+    print bookHelper.getBookLabels(3)
+
 main()

@@ -150,3 +150,12 @@ def getBookSumOfLabel(labelName, cur, conn):
     bookSum = cur.fetchone()[0]
     return bookSum
 
+@mysqlConn
+def getBookLabels(bookUid, cur, conn):
+    sql = '''select bookLabel.name from labelOfBook inner join bookLabel
+          on labelOfBook.bookLabelUid = bookLabel.uid
+          where labelOfBook.bookUid = %s '''
+    num = cur.execute(sql, bookUid)
+    records = cur.fetchmany(num)
+    labels = [rec[0] for rec in records]
+    return labels
