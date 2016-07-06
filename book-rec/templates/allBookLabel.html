@@ -29,8 +29,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="./homePage.html">主页<span class="sr-only">(current)</span></a></li>
-        <li class="active"><a href="./allBookLabel.html">分类</a></li>
+        <li><a href="http://meetbook.applinzi.com/">主页<span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="http://meetbook.applinzi.com/book-category">分类</a></li>
       </ul>
       <form class="navbar-form navbar-left" role="search" action='/search-result?page=1'>
         <div class="form-group">
@@ -55,22 +55,14 @@
                           {% for label in allLabelList %}
                           <a href="/book-label/{{ label }}">{{ label }}</a>
                           {% end %}
-                          <!-- <a href="#" class="label-item">小说</a>
-                          <a href="#" class="label-item">散文</a>
-                          <a href="#" class="label-item">漫画</a>
-                          <a href="#" class="label-item">历史</a>
-                          <a href="#" class="label-item">哲学</a>
-                          <a href="#" class="label-item">心理</a>
-                          <a href="#" class="label-item">互联网</a>
-                          <a href="#" class="label-item">编程</a> -->
                         </div>
                     </div>
 
                     <div class="pages">
-                      <div class="pageHeader">分页：当前页{{ curPage }}</div>
+                      <div class="pageHeader">当前页: {{ curPage }}</div>
                       <div class="pageContent">
                         {% for page in range(1, totalPage + 1) %}
-                          <a href="/book-label/{{ name }}?page={{ curPage }}">{{ page }}</a>
+                          <a href="/book-label/{{ name }}?page={{ page }}">{{ page }}</a>
                         {% end %}
                       </div>
                     </div>
