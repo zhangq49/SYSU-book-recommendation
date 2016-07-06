@@ -4,23 +4,24 @@ from root import *
 
 class HomePageHandler(BaseHandler):
     def get(self):
-        try:
-            cookie = super(HomePageHandler, self).get_current_user()
-            
-            # popularBookList = book.getPopularBooks(quantityOfPopularBook)
-            # recommendBookList = book.getRecommendedBooks(cookie)
-            popularBookList = getPopularBook()
-            recommendBookList = getRecommendBook(cookie)
-            popularLabelList = getPopularLabel()
+        cookie = super(HomePageHandler, self).get_current_user()
 
-            self.render('homePage.html',
-            	popularBookList=popularBookList,
-            	recommendBookList=recommendBookList,
-            	popularLabelList=popularLabelList,
-            	
-            	)
-        except:
-            self.write_error(404)
+        books = book.getPopularBooks(quantityOfPopularBook)
+        popularBookList = formatToBookList(books)
+        
+        books = book.getRecommendedBooks(cookie)
+        recommendBookList = formatToBookList(books)
+
+        bookLabels = bookLabel.getLabels(0, sizeOfGetLabelsMethod)
+        popularLabelList = formatToPopularLabelList(bookLabels)
+
+        self.render('homePage.html',
+        	popularBookList=popularBookList,
+        	recommendBookList=recommendBookList,
+        	popularLabelList=popularLabelList,
+        	
+        	)
+
 
     def post(self,):
         self.direct('/')
