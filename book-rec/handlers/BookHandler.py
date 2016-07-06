@@ -5,32 +5,37 @@ from root import *
 
 class BookHandler(BaseHandler):
     def get(self,id):
-        try:
-            cookie = super(BookHandler, self).get_current_user()
-            
-            recordVisit(cookie, id)
 
-            temp = getBookInfo(id)
-            bookName = temp[0]
-            bookPicURL = temp[1]
-            author = temp[2]
-            press = temp[3]
-            score = temp[4]
-            scoreNumber = temp[5]
-            introduction = temp[6]
-            authorIntro = temp[7]
-            sysuBookURL = temp[8]
-            relatedBookList = temp[9]
-            
-            popularLabelList = getPopularLabel()
-            self.render('book.html',
-                temp=temp, bookName=bookName, bookPicURL=bookPicURL,
-                author=author, press=press, score=score, scoreNumber=scoreNumber,
-                introduction=introduction, authorIntro=authorIntro,
-                sysuBookURL=sysuBookURL, relatedBookList=relatedBookList,
-                popularLabelList=popularLabelList)
-        except:
-            self.write_error(404)
+        cookie = super(BookHandler, self).get_current_user()
+        
+        recordVisit(cookie, id)
+
+        bookDetail = book.getBookDetail(id)
+        bookName = bookDetail.name
+        bookPicURL = bookDetail.imgUrl
+        author = bookDetail.author
+        press = bookDetail.press
+        score = bookDetail.doubanPoint
+        scoreNumber = bookDetail.doubanRateSum
+        introduction = bookDetail.bookDescription
+        authorIntro = bookDetail.authorDescription
+        sysuBookURL = bookDetail.sysuLibUrl
+        isbn = bookDetail.isbn
+        books = book.getRelevantBooks(id)
+        relatedBookList = formatToBookList(books)
+        
+        bookLabels = bookLabel.getLabels(0, sizeOfGetLabelsMethod)
+        popularLabelList = formatToPopularLabelList(bookLabels)
+
+        name = ['等待数据库API修改',]
+
+        self.render('book.html',
+            bookName=bookName, bookPicURL=bookPicURL,
+            author=author, press=press, score=score, scoreNumber=scoreNumber,
+            introduction=introduction, authorIntro=authorIntro,
+            sysuBookURL=sysuBookURL, relatedBookList=relatedBookList,
+                popularLabelList=popularLabelList, isbn=isbn, name=name)
+
 
     def post(self):
         pass

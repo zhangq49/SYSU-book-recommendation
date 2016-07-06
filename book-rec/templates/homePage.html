@@ -29,8 +29,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="./homePage.html">主页<span class="sr-only">(current)</span></a></li>
-        <li><a href="./allBookLabel.html">分类</a></li>
+        <li class="active"><a href="http://meetbook.applinzi.com/">主页<span class="sr-only">(current)</span></a></li>
+        <li><a href="http://meetbook.applinzi.com/book-label">分类</a></li>
       </ul>
       <form class="navbar-form navbar-left" role="search" action='/search-result?page=1'>
         <div class="form-group">
@@ -59,10 +59,6 @@
                                 <a href="/book/{{ book[0]}} ">{{ book[1] }}</a>
                             </div>
                             {% end %}
-                            <!-- <div class="hotBooks">
-                                <img src="../static/images/book0.jpg" alt="Hot Book">
-                                <a href="#">book name</a>
-                            </div> -->
                         </div>
                         <div style="clear:both"></div>
                     </div>
@@ -76,10 +72,6 @@
                                 <a href="/book/{{ book[0]}}">{{ book[1] }}</a>
                             </div>
                             {% end %}
-                            <!-- <div class="recBooks">
-                                <img src="../static/images/book1.jpg" alt="Recommendation">
-                                <a href="#">book name</a>
-                            </div> -->
                         </div>
                         <div style="clear:both"></div>
                     </div>
@@ -93,13 +85,6 @@
                         {% for label in popularLabelList %}
                         <a href="/book-label/{{ label }}" class="label-item">{{ label }}</a>
                         {% end %}
-                        <!-- <a href="#" class="label-item">散文</a>
-                        <a href="#" class="label-item">漫画</a>
-                        <a href="#" class="label-item">历史</a>
-                        <a href="#" class="label-item">哲学</a>
-                        <a href="#" class="label-item">心理</a>
-                        <a href="#" class="label-item">互联网</a>
-                        <a href="#" class="label-item">编程</a> -->
                     </div>
                 </div>
             </div>
