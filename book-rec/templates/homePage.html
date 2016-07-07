@@ -34,7 +34,7 @@
       </ul>
       <form class="navbar-form navbar-left" role="search" action='/search-result?page=1'>
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="搜索书籍" required>
+          <input type="text" name="bookName"class="form-control" placeholder="搜索书籍" required>
         </div>
         <button type="submit" class="btn btn-default">搜索</button>
       </form>
@@ -55,10 +55,18 @@
                         <div class="hotContent">
                             {% for book in popularBookList %}
                             <div class="hotBooks">
-                                <img src="{{ book[2] }}" alt="Hot Book">
-                                <a href="/book/{{ book[0]}} ">{{ book[1] }}</a>
+                                <a href="/book/{{ book[0] }}" id="bookPic">
+                                    <img src="{{ book[2] }}" alt="Hot Book">
+                                </a>
+                                <a href="/book/{{ book[0] }}">{{ book[1] }}</a>
                             </div>
                             {% end %}
+                            <!-- <div class="hotBooks">
+                                <a href="#" id="bookPic">
+                                    <img src="../static/images/book1.jpg" alt="Hot Book">
+                                </a>
+                                <a href="#">bookname</a>
+                            </div> -->
                         </div>
                         <div style="clear:both"></div>
                     </div>
@@ -68,7 +76,9 @@
                         <div class="recContent">
                             {% for book in recommendBookList %}
                             <div class="recBooks">
-                                <img src="{{ book[2] }}" alt="Recommendation">
+                                <a href="/book/{{ book[0] }}" id="bookPic">
+                                    <img src="{{ book[2] }}" alt="Recommendation">
+                                </a>
                                 <a href="/book/{{ book[0]}}">{{ book[1] }}</a>
                             </div>
                             {% end %}
