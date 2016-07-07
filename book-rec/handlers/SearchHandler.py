@@ -24,7 +24,7 @@ class SearchHandler(BaseHandler):
         	popularLabelList=popularLabelList,
         	totalPage=int(totalPage),
         	curPage=int(page),
-        	searchString='searchString',
+        	searchString=searchString,
         	)
 
 

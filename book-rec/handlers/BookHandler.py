@@ -27,7 +27,7 @@ class BookHandler(BaseHandler):
         bookLabels = bookLabel.getLabels(0, sizeOfGetLabelsMethod)
         popularLabelList = formatToPopularLabelList(bookLabels)
 
-        bookLabels = ['标签1', '标签2','标签3', '标签3', '标签3', '标签3', '标签3', '标签3', '标签3', '标签3', '标签3', '标签3', '标签3']
+        bookLabels = book.getBookLabels(id)
 
         self.render('book.html',
             bookName=bookName, bookPicURL=bookPicURL,
