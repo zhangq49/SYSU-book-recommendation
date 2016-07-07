@@ -56,13 +56,15 @@ def saveLabels(bookUid, labels, cur, conn):
     dupLabels = [item[0] for item in records]
     newLabels = [(label,) for label in labels if label not in dupLabels]
     # increase counters of duplicate labels
-    dupLabelRange = makeSQLRange(dupLabels)
-    sql = '''update bookLabel set useCount = useCount + 1 where name in ''' \
-          + dupLabelRange
-    cur.execute(sql)
+    if dupLabels:
+        dupLabelRange = makeSQLRange(dupLabels)
+        sql = '''update bookLabel set useCount = useCount + 1 where name in ''' \
+              + dupLabelRange
+        cur.execute(sql)
     # insert new lables into tables
-    sql = '''insert into bookLabel(name, useCount) values(%s, 1)'''
-    cur.executemany(sql, newLabels)
+    if newLabels:
+        sql = '''insert into bookLabel(name, useCount) values(%s, 1)'''
+        cur.executemany(sql, newLabels)
     # get all labels' uid, and bound them with bookUid
     sql = '''select uid from bookLabel where name in ''' + labelRange
     num = cur.execute(sql)
