@@ -76,9 +76,17 @@
                     <div class="similar">
                       <div class="similarHeader">相似书籍</div>
                         <div class="similarContent">
+                          <div class="similarBooks">
+                                <a href="/book/{{ book[0] }}" id="bookPic">
+                                    <img src="{{ book[2] }}" alt="Similar Book">
+                                </a>
+                                <a href="/book/{{ book[0]}}">{{ book[1] }}</a>
+                            </div>
                             {% for book in relatedBookList%}
                             <div class="similarBooks">
-                                <img src="{{ book[2] }}" alt="Similar Book">
+                                <a href="/book/{{ book[0] }}" id="bookPic">
+                                    <img src="../static/images/book1.jpg" alt="Similar Book">
+                                </a>
                                 <a href="/book/{{ book[0]}}">{{ book[1] }}</a>
                             </div>
                             {% end %}
