@@ -4,15 +4,6 @@
 import math
 from BaseHandler import *
 
-from getPopularBook import *
-from getRecommendBook import *
-from getPopularLabel import *
-from getSearchResult import *
-from getAllLabel import *
-from getBookInfo import *
-from getBookByLabel import *
-from recordVisit import *
-
 from modules.db.helper import book
 from modules.db.helper import bookLabel
 from modules.db.helper import user
