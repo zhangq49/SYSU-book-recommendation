@@ -44,7 +44,12 @@ body {
 
 .hotBooks img, .recBooks img, .similarBooks img {
     width: 100%;
-    height: 197px;
+    height: 100%;
+}
+
+#bookPic {
+    display: inline-block;
+    height: 197px !important;
 }
 
 .hotBooks a, .recBooks a, .similarBooks a {

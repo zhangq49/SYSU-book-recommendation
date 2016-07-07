@@ -55,7 +55,9 @@
                         <div class="hotContent">
                           {% for book in searchResultBookList %}
                             <div class="hotBooks">
-                                <img src="{{ book[2] }}" alt="Hot Book">
+                                <a href="/book/{{ book[0] }}" id="bookPic">
+                                    <img src="{{ book[2] }}" alt="Hot Book">
+                                </a>
                                 <a href="/book/{{ book[0] }}">{{ book[1] }}</a>
                             </div>
                           {% end %}
@@ -67,7 +69,7 @@
                       <div class="pageHeader">当前页: {{ curPage }}</div>
                       <div class="pageContent">
                         {% for page in range(1, totalPage + 1) %}
-                          <a href="/book-label/{{ name }}?page={{ page }}">{{ page }}</a>
+                          <a href="/book-label?page={{ page }}">{{ page }}</a>
                         {% end %}
                       </div>
                     </div>
