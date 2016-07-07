@@ -1,17 +1,18 @@
 #-*- coding: UTF-8 -*-
 import urllib
-import time
+
 import urllib2
 import re
-import sys
-sys.path.append("..")
-from modules.db.models.book import Book
-import modules.db.helper.book as bookSQL
+
 from bs4 import BeautifulSoup
 import bs4
 import json
 import random
 import cookielib
+import sys
+sys.path.append("..")
+import modules.db.models.book
+
 
 bookUrlList = list()
 
@@ -34,10 +35,6 @@ head_user_agent = ['Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) li
                        'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.92 Safari/537.1 LBBROWSER',
                        'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0; BIDUBrowser 2.x)',
                        'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.11 TaoBrowser/3.0 Safari/536.11']
-cookie = ['bid=8vpRCSlpalM; gr_user_id=971c8c09-e36d-4583-b29d-fdf6d9ce204f; ll="118281"; viewed="1004795_25862578_4242406_1449351_10768068_24316315_1837654_26735085_3608208_6082808"; ap=1; __ads_session=Ev13Y4/FvwhIkKAPtgA=; __utma=30149280.1128552842.1467592956.1467775528.1467856707.9; __utmc=30149280; __utmz=30149280.1467856707.9.5.utmcsr=baidu|utmccn=(organic)|utmcmd=organic',
-    'viewed="25862578_26657570_26787931"; bid=6AKNIuCuCUM; gr_user_id=953140fa-8947-46bd-8f01-c6bbb186b931; __utma=30149280.1155223947.1467594905.1467594905.1467614162.2; __utmz=30149280.1467594905.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); ll="118281"',
-'bid=Ogbr-5dF1m0; __utma=30149280.597244668.1467693388.1467693388.1467693388.1; __utmz=30149280.1467693388.1.1.utmcsr=baidu|utmccn=(organic)|utmcmd=organic'
-]
 data = None
 
 #Get a page through its url
@@ -49,14 +46,11 @@ def getHtml(url):
 def getHtml2(url):
     headers = {
         'User-Agent':head_user_agent[random.randrange(0,len(head_user_agent))],
-        'Cookie':cookie[random.randrange(0, len(cookie))]
+        'Cookie':'viewed="25862578_26657570_26787931"; bid=6AKNIuCuCUM; gr_user_id=953140fa-8947-46bd-8f01-c6bbb186b931; __utma=30149280.1155223947.1467594905.1467594905.1467614162.2; __utmz=30149280.1467594905.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); ll="118281"'
     }
     req = urllib2.Request(url, data, headers)
     response = urllib2.urlopen(req)
     html = response.read()
-    rand = random.uniform(0, 3)
-    print rand
-    time.sleep(rand)
     return html
 
 def getTagList():
@@ -74,7 +68,7 @@ def printList(l):
 
 def printBook(bookItem):
     print '#############################'
-    #print 'uid:' + str(bookItem.uid)
+    print 'uid:' + str(bookItem.uid)
     print 'name :' + str(bookItem.name)
     print 'imgUrl:' + str(bookItem.imgUrl) 
     print 'isbn:' + str(bookItem.isbn)
@@ -82,8 +76,8 @@ def printBook(bookItem):
     print 'press:' + str(bookItem.press)
     print 'doubanPoint:' + str(bookItem.doubanPoint)
     print 'sdoubanRateSum:' + str(bookItem.doubanRateSum)
-    print 'bookDesciption:' + str(bookItem.bookDescription)
-    print 'authorDesciption:' + str(bookItem.authorDescription)
+    print 'bookDesciption:' + str(bookItem.bookDesciption)
+    print 'authorDesciption:' + str(bookItem.authorDesciption)
     print 'sysuLibUrl:' + str(bookItem.sysuLibUrl)
     print '#############################'
 
@@ -98,14 +92,11 @@ def getTextList(content):
             else:
                 textList.append(content.strip().encode('UTF-8'))
             return textList
-    try:
-        for sub in content.contents:
-            textList.extend(getTextList(sub))
-    except:
-        pass
+    for sub in content.contents:
+        textList.extend(getTextList(sub))
     return textList
 
-def getBookInf(book, firstBook = False):
+def getBookInf(book):
     html = getHtml2(book)
     soup = BeautifulSoup(html)
     imgUrl = soup.find('img', src = re.compile("^https://"))['src']
@@ -119,22 +110,21 @@ def getBookInf(book, firstBook = False):
     
     bookInf['书名'] = soup.find('span', property = 'v:itemreviewed').text.strip().encode('UTF-8')
     bookInf['imgUrl'] = imgUrl.encode('UTF-8')
-
-    try:
-        bookInf['豆瓣评分'] = soup.find('strong').text.strip().encode('UTF-8')
-        bookInf['评分人数'] = soup.find('span', property = 'v:votes').text.strip().encode('UTF-8')
-    except:
+    if soup.find('strong').text.strip().encode('UTF-8') == '':
         bookInf['豆瓣评分'] = '0'
         bookInf['评分人数'] = '0'
+    else:
+        bookInf['豆瓣评分'] = soup.find('strong').text.strip().encode('UTF-8')
+        bookInf['评分人数'] = soup.find('span', property = 'v:votes').text.strip().encode('UTF-8')
     
     intro = soup.find_all('div', class_ = 'intro')
-    try:
+    if len(intro) > 0:
         bookInf['内容简介'] = intro[0].text.strip().encode('UTF-8')
-    except:
+    else:
         bookInf['内容简介'] = ''
-    try:
+    if len(intro) > 1:
         bookInf['作者简介'] = intro[1].text.strip().encode('UTF-8')
-    except:
+    else:
         bookInf['作者简介'] = ''
     
     if not 'ISBN' in bookInf:
@@ -144,36 +134,19 @@ def getBookInf(book, firstBook = False):
     if not '作者' in bookInf:
         bookInf['作者'] = ''
 
-    tags = soup.find_all('a', class_ = 'tag')
-    print "tags:"
-    for tag in tags:
-        print tag.string
-        print type(tag.string)
-
-    bookItem = Book(name = bookInf['书名'],
+    bookItem = Book(uid = -1,
+                    name = bookInf['书名'],
                     imgUrl = bookInf['imgUrl'],
                     isbn = bookInf['ISBN'],
                     author = bookInf['作者'],
                     press = bookInf['出版社'],
                     doubanPoint = bookInf['豆瓣评分'],
                     doubanRateSum = bookInf['评分人数'],
-                    bookDescription = bookInf['内容简介'],
-                    authorDescription = bookInf['作者简介'],
-                    sysuLibUrl='',
-                    labels = tags)
+                    bookDesciption = bookInf['内容简介'],
+                    authorDesciption = bookInf['作者简介'],
+                    sysuLibUrl='')
     printBook(bookItem)
-    if not bookSQL.isDup(bookItem.isbn):
-        print "Saving"
-        bookSQL.saveBook(bookItem)
-    else:
-        print "Has saved"
-    
-    if firstBook:
-        doulists = soup.find_all('a', href = re.compile('^https://www.douban.com.doulist/*'))
-        for doulist in doulists:
-            print doulist['href']
-            print type(doulist['href'])
-    
+
 def getBookFromJson(bookJson):
     print bookJson
     uid = -1
@@ -232,20 +205,32 @@ def getTagInf(tag):
         for book in soup.find_all("a", href=re.compile("^https://book.douban.com/subject"), class_ = "nbg"):
             print book['href']
             bookUrlList.append(book['href'])
-            getBookInf(book['href'], firstBook = True)
+            #getBookInf(book['href'])
 
 
 ##Search given tag and get book list
 def searchTagList():
     tagList = getTagList()
     for tag in tagList:
-        print '======================' + tag + '========================='
+        print '======================' + tag.encode('UTF-8') + '========================='
         getTagInf(tag)
 
 #Just for test
 def test():
     searchTagList()
-###########################
-test()
 
+
+#bookId = getIdFromUrl("https://api.douban.com/v2/book/25862578")
+#bookJson = getBookJsonFromId(bookId)
+#book = getBookFromJson(bookJson)
+#printBook(book)
+
+
+
+getTagInf('小说')
+for bookUrl in bookUrlList:
+    bookId = getIdFromUrl(bookUrl)
+    print bookUrl
+    bookJson = getBookJsonFromId(bookId)
+    getBookFromJson(bookJson)
 
