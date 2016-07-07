@@ -29,7 +29,8 @@ def saveBook(book, cur, conn):
     cur.execute(sql, book.isbn)
     bookUid = cur.fetchone()[0]
     #
-    saveLabels(bookUid, book.labels, cur, conn)
+    if book.labels:
+        saveLabels(bookUid, book.labels, cur, conn)
     conn.commit()
     return bookUid
 
@@ -39,6 +40,8 @@ def makeSQLRange(seq):
     t = ('a', 'b')
     makeRange(t) returns "('a', 'b')"
     '''
+    if not seq:
+        print 'Error: Empty Set!'
     lst = ["'%s'" % item for item in seq]
     string = '(%s)' % (','.join(lst))
     return string
