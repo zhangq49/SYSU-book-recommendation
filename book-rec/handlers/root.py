@@ -19,15 +19,15 @@ from modules.db.helper import user
 
 
 
-quantityOfPopularBook = 10
+quantityOfPopularBook = 2
 # 热门标签个数
-sizeOfGetLabelsMethod = 20
+sizeOfGetLabelsMethod = 2
 # 某类标签的书本数
-sizeOfGetBooksByLabelMethod = 10
+sizeOfGetBooksByLabelMethod = 2
 # 标签页中的标签数
-LabelCountPerPage = 20
+LabelCountPerPage = 2
 # 查询结果每页的书本数
-searchBookCountPerPage = 10
+searchBookCountPerPage = 2
 # 所有查询结果数量
 allResultCount = 1000000
 

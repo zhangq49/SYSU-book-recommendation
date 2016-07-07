@@ -27,14 +27,14 @@ class BookHandler(BaseHandler):
         bookLabels = bookLabel.getLabels(0, sizeOfGetLabelsMethod)
         popularLabelList = formatToPopularLabelList(bookLabels)
 
-        name = ['等待数据库API修改',]
+        bookLabels = ['标签1', '标签2','标签3', '标签3', '标签3', '标签3', '标签3', '标签3', '标签3', '标签3', '标签3', '标签3', '标签3']
 
         self.render('book.html',
             bookName=bookName, bookPicURL=bookPicURL,
             author=author, press=press, score=score, scoreNumber=scoreNumber,
             introduction=introduction, authorIntro=authorIntro,
             sysuBookURL=sysuBookURL, relatedBookList=relatedBookList,
-                popularLabelList=popularLabelList, isbn=isbn, name=name)
+                popularLabelList=popularLabelList, isbn=isbn, bookLabels=bookLabels)
 
 
     def post(self):

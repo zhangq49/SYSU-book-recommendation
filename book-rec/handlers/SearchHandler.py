@@ -8,6 +8,7 @@ class SearchHandler(BaseHandler):
         cookie = super(SearchHandler, self).get_current_user()
 
         searchString = self.get_argument('bookName', '')
+
         page = self.get_argument('page', '1')
 
         books = book.searchBooks(searchString, int(page) - 1, searchBookCountPerPage)
@@ -23,7 +24,7 @@ class SearchHandler(BaseHandler):
         	popularLabelList=popularLabelList,
         	totalPage=int(totalPage),
         	curPage=int(page),
-        	searchString='searchString'
+        	searchString='searchString',
         	)
 
 
