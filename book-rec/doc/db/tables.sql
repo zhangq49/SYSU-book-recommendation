@@ -46,3 +46,6 @@ CREATE TABLE userBookView(
     foreign key(bookUid) references book(uid)
 ) DEFAULT CHARSET=utf8;
 
+CREATE TABLE doulie(
+    uid INT primary key auto_increment
+) DEFAULT CHARSET=utf8;

@@ -7,8 +7,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), '..')))
 print(sys.path[0])
 
-from modules.db.helper import book as bookHelper
+
 from modules.db.models.book import Book
+from modules.db.helper import book as bookHelper
+from modules.db.helper import doulie as doulieHelper
 
 def main():
     print 'isDup'
@@ -21,6 +23,10 @@ def main():
         'author', 'press', 10, 100, 'desc', 'authordesc', 'liburl',
         ['label2', 'dygw', 'label4', 'label5'])
     # bookUid = bookHelper.saveBook(book)
-    print 'bookUid', bookUid
+    # print 'bookUid', bookUid
+
+    print 'isDoulieDup'
+    print doulieHelper.isDoulieDup('1'), 'true'
+    print doulieHelper.isDoulieDup(2), 'false'
 
 main()
