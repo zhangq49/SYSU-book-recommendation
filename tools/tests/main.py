@@ -33,4 +33,8 @@ def main():
     # doulieHelper.saveDoulieUid('2')
     # doulieHelper.saveDoulieUid(3)
 
+    print 'getBookUid'
+    print bookHelper.getBookUid('isbn123423')
+    print bookHelper.getBookUid('i23')
+
 main()

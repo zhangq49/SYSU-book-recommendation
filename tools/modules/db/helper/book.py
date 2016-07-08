@@ -74,5 +74,17 @@ def saveLabels(bookUid, labels, cur, conn):
           ({}, %s)'''.format(bookUid)
     cur.executemany(sql, allLabels)
 
-
+@mysqlConn
+def getBookUid(isbn, cur, conn):
+    '''
+    Return book's uid in tables.
+    If isbn doesn't exist, return -1.
+    '''
+    sql = '''select uid from book where isbn = %s'''
+    cur.execute(sql, isbn)
+    record = cur.fetchone()
+    if record:
+        return record[0]
+    else:
+        return -1
     
