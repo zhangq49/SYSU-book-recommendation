@@ -35,8 +35,32 @@ class DoubanBookSpider(Spider):
 	def start_requests(self):
 		yield Request("https://api.douban.com/v2/book/25862578", callback=self.parse_book)
 
-	
-	
+	def check_book_in_library(self, response):
+		item = response.meta['item']
+		isbn = response.meta['isbn']
+		print '\nchecking whether there is a printed books in SYSU library: ', response.url
+		print '\nisbn is : ', isbn
+
+		# check whether the isbn of the response meta is in the response.url page and 
+		# whether the isbn of the response meta is the same as the the isbn in the response.url page
+		sel = Selector(response)
+		sysu_book_info_isbn = sel.xpath("/html/body/table[3]/tr[1]/td[1]/div[@class='tabcontent']/table/tr[2]/td[2]/a/text()").extract()
+		if (sysu_book_info_isbn):
+			sysu_isbn = sysu_book_info_isbn[0][:17].replace('-', '')
+			print "sysu_book_info_isbn is : ", sysu_book_info_isbn[0], sysu_isbn
+			if (isbn == sysu_isbn):
+				print "True"
+				item['book_isbn'] = response.url
+				yield item
+			else:
+				print "False"
+				return
+		else:
+			print "not found this book in sysu library"
+			return
+		
+
+		#yield item
 
 	def parse_book(self, response):
 		print '\nparsing book_of_set_id: ', response.url
@@ -57,7 +81,12 @@ class DoubanBookSpider(Spider):
 
 		item['book_info'] = book_info_json[0].encode('utf-8')
 
-		yield item
+		req_url = "http://202.116.64.108:8991/F/-?func=find-b&find_code=WRD&request=" + book_isbn + "&local_base=ZSU01"
+
+		request = Request(req_url, callback=self.check_book_in_library, dont_filter=True)
+		request.meta['item'] = item
+		request.meta['isbn'] = book_isbn
+		yield request
 
 	def parse_list(self, response):
 		print '\nparsing book_of_tag list: ', response.url

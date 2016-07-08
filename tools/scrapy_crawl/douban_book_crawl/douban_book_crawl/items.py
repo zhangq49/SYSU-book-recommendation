@@ -12,3 +12,4 @@ class DoubanBookCrawlItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     book_info = scrapy.Field()
+    book_isbn = scrapy.Field()
