@@ -29,4 +29,8 @@ def main():
     print doulieHelper.isDoulieDup('1'), 'true'
     print doulieHelper.isDoulieDup(2), 'false'
 
+    print 'saveDoulieUid'
+    # doulieHelper.saveDoulieUid('2')
+    # doulieHelper.saveDoulieUid(3)
+
 main()
