@@ -12,7 +12,9 @@ import bs4
 import json
 import random
 import cookielib
+import modules.db.helper.doulie as doulie
 
+bookNum = 0
 bookUrlList = list()
 
 head_user_agent = ['Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko',
@@ -54,7 +56,7 @@ def getHtml2(url):
     req = urllib2.Request(url, data, headers)
     response = urllib2.urlopen(req)
     html = response.read()
-    rand = random.uniform(0, 3)
+    rand = random.uniform(0, 1)
     print rand
     time.sleep(rand)
     return html
@@ -105,6 +107,40 @@ def getTextList(content):
         pass
     return textList
 
+def getDoulist(doulist):
+    '''
+    Get doulist through url and save the book in mysql
+    '''
+    index = 0
+    print "Get doulist:  " + doulist
+    while 1:
+        html = getHtml2(doulist + "?start=" + str(index*25) + "&sort=seq&sub_type=")
+        index += 1
+        soup = BeautifulSoup(html)
+        itemList = soup.find_all('a', href = re.compile("https://book.douban.com/subject/*"))
+        if (len(itemList) == 0):
+            break
+        for item in itemList[::2]:
+            #print "item:"
+            #print item["href"]
+            print "Get doulie item"
+            print item['href']
+            getBookInf(item['href'])
+
+    
+def writeText(txt, data):
+    output = open(txt, 'a')
+    try:
+        output.write(data)
+    finally:
+        output.close()
+
+def getDoulieId(url):
+    #print url
+    strs = url.split('/')
+    print "doulieId:#####" + strs[-2]
+    return strs[-2]
+
 def getBookInf(book, firstBook = False):
     html = getHtml2(book)
     soup = BeautifulSoup(html)
@@ -145,10 +181,10 @@ def getBookInf(book, firstBook = False):
         bookInf['作者'] = ''
 
     tags = soup.find_all('a', class_ = 'tag')
-    print "tags:"
-    for tag in tags:
-        print tag.string
-        print type(tag.string)
+    #print "tags:"
+    #for tag in tags:
+        #print tag.string
+        #print type(tag.string)
 
     bookItem = Book(name = bookInf['书名'],
                     imgUrl = bookInf['imgUrl'],
@@ -163,16 +199,37 @@ def getBookInf(book, firstBook = False):
                     labels = tags)
     printBook(bookItem)
     if not bookSQL.isDup(bookItem.isbn):
-        print "Saving"
-        bookSQL.saveBook(bookItem)
+        bookid = bookSQL.saveBook(bookItem)
+        print "Saving" + str(bookid)
     else:
-        print "Has saved"
+        bookid = bookSQL.getBookUid(bookItem.isbn)
+        print str(bookid) + "Has saved"
     
+
     if firstBook:
+        print 'firstBook'
         doulists = soup.find_all('a', href = re.compile('^https://www.douban.com.doulist/*'))
+        doulieIndex = 0
         for doulist in doulists:
-            print doulist['href']
-            print type(doulist['href'])
+            doulieId = getDoulieId(doulist['href'])
+            print doulie.isDoulieDup(doulieId)
+            if doulie.isDoulieDup(doulieId):
+                continue
+            #else:
+            #    doulie.saveDoulieUid(doulieId)
+            
+            writeText('doulist', str(bookid) + ':')
+            getDoulist(doulist['href'])
+            writeText('doulist', '\n')
+            doulie.saveDoulieUid(doulieId)
+    else:
+        print "not first book"
+        writeText('doulist', str(bookid) + ',')
+    
+    global bookNum
+    bookNum += 1
+    print "bookNum: " + str(bookNum)
+    print '-------------------------------------------------------------'
     
 def getBookFromJson(bookJson):
     print bookJson
@@ -247,5 +304,5 @@ def test():
     searchTagList()
 ###########################
 test()
-
+#getBookInf("https://book.douban.com/subject/25862578/", firstBook = True)
 
