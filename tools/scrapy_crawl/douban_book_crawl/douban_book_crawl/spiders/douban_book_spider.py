@@ -1,3 +1,5 @@
+import json
+
 from scrapy.spiders import Spider
 from scrapy.selector import Selector
 from scrapy.http import Request
@@ -6,6 +8,8 @@ from urlparse import urljoin
 from urlparse import urlparse
 from urlparse import urlunparse
 from posixpath import normpath
+
+from douban_book_crawl.items import DoubanBookCrawlItem
  
 def myjoin(base, url):
     url1 = urljoin(base, url)
@@ -13,16 +17,47 @@ def myjoin(base, url):
     path = normpath(arr[2])
     return urlunparse((arr.scheme, arr.netloc, path, arr.params, arr.query, arr.fragment))
 
-class DoubanBookCrawl(Spider):
-	name = "douban_book_crawl"
-	allowed_domains = ["book.douban.com"]
+class DoubanBookSpider(Spider):
+	name = "douban_book_spider"
+	allowed_domains = ["book.douban.com", "api.douban.com"]
+
+	# start_urls = [
+	# 	"https://book.douban.com/tag/",
+	# ]
+
+	# def start_requests(self):
+	# 	yield Request("https://book.douban.com/tag/")
 
 	start_urls = [
-		"https://book.douban.com/tag/",
+		"https://api.douban.com/v2/book/25862578",
 	]
 
 	def start_requests(self):
-		yield Request("https://book.douban.com/tag/", headers={'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"})
+		yield Request("https://api.douban.com/v2/book/25862578", callback=self.parse_book)
+
+	
+	
+
+	def parse_book(self, response):
+		print '\nparsing book_of_set_id: ', response.url
+
+		sel = Selector(response)
+
+		book_info_json = sel.xpath("/html/body/p/text()").extract()
+		print '................................... START book_info_json ......................................\n'
+		print book_info_json[0]
+		print '................................... END book_info_json ......................................\n'
+		# first check whether the book is in the sysu library
+		book_info_decode = json.loads(book_info_json[0])
+		print type(book_info_decode)
+		book_isbn = book_info_decode["isbn13"]
+		print "the isbn of this book is ", book_isbn
+
+		item = DoubanBookCrawlItem()
+
+		item['book_info'] = book_info_json[0].encode('utf-8')
+
+		yield item
 
 	def parse_list(self, response):
 		print '\nparsing book_of_tag list: ', response.url
@@ -42,6 +77,8 @@ class DoubanBookCrawl(Spider):
 			req_book_url = base_url + book_id
 			print 'req_book_url', req_book_url
 
+			yield Request(req_book_url, callback=self.parse_book)
+
 		print '-------------------------------- Finish Parsing Book In The Book_Url --------------------------------\n'
 
 
@@ -51,7 +88,7 @@ class DoubanBookCrawl(Spider):
 		for i in range(0, 99):
 			req_url = response.url + "?start=" + str(20 * i) + "&type=T"
 			print 'req_url in this page is ', req_url
-			yield Request(req_url, headers={'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"}, callback=self.parse_list)
+			yield Request(req_url, callback=self.parse_list)
 
 
 	def parse(self, response):
@@ -75,7 +112,7 @@ class DoubanBookCrawl(Spider):
 		print '################################ Finish Parsing Tags In The Start_Url ################################\n'
 
 		print '\n********************************* Start Parsing Book List In One Tag Page *********************************'
-		yield Request(base_url+tag_url, headers={'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"}, callback=self.parse_tag)
+		yield Request(base_url+tag_url, callback=self.parse_tag)
 
 		print '********************************* Finish Parsing Book List In One Tag Page *********************************\n'
 
