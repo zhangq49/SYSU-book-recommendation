@@ -32,9 +32,11 @@ class DoubanBookSpider(Spider):
 		"https://api.douban.com/v2/book/25862578",
 	]
 
+	# the first url where Spider starts to crawl
 	def start_requests(self):
 		yield Request("https://api.douban.com/v2/book/25862578", callback=self.parse_book)
 
+	# check whether the book of the douban website has a printed book in SYSU library
 	def check_book_in_library(self, response):
 		item = response.meta['item']
 		isbn = response.meta['isbn']
@@ -62,6 +64,7 @@ class DoubanBookSpider(Spider):
 
 		#yield item
 
+	# retrieve the book info from the given url page
 	def parse_book(self, response):
 		print '\nparsing book_of_set_id: ', response.url
 
@@ -88,6 +91,7 @@ class DoubanBookSpider(Spider):
 		request.meta['isbn'] = book_isbn
 		yield request
 
+	# parse each page for the give tag and retrieve the book url
 	def parse_list(self, response):
 		print '\nparsing book_of_tag list: ', response.url
 
@@ -111,6 +115,7 @@ class DoubanBookSpider(Spider):
 		print '-------------------------------- Finish Parsing Book In The Book_Url --------------------------------\n'
 
 
+	# parse the tag and request each tag page
 	def parse_tag(self, response):
 		print '\nparse_tag url is ', response.url
 
@@ -119,7 +124,7 @@ class DoubanBookSpider(Spider):
 			print 'req_url in this page is ', req_url
 			yield Request(req_url, callback=self.parse_list)
 
-
+	#parse the tag list page
 	def parse(self, response):
 		base_url = "https://book.douban.com"
 		print '\n################################ Start Parsing Tags In The Start_Url ################################'
