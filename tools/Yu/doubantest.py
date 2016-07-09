@@ -13,6 +13,8 @@ import json
 import random
 import cookielib
 import modules.db.helper.doulie as doulie
+from multiprocessing.dummy import Pool
+
 
 bookNum = 0
 bookUrlList = list()
@@ -54,11 +56,14 @@ def getHtml2(url):
         'Cookie':cookie[random.randrange(0, len(cookie))]
     }
     req = urllib2.Request(url, data, headers)
-    response = urllib2.urlopen(req)
-    html = response.read()
+    try:
+        response = urllib2.urlopen(req)
+        html = response.read()
+    except:
+        return ''
     rand = random.uniform(0, 1)
     print rand
-    time.sleep(rand)
+    #time.sleep(rand)
     return html
 
 def getTagList():
@@ -75,6 +80,9 @@ def printList(l):
         print type(sub)
 
 def printBook(bookItem):
+    '''
+    Print the information of the book given
+    '''
     print '#############################'
     #print 'uid:' + str(bookItem.uid)
     print 'name :' + str(bookItem.name)
@@ -86,6 +94,9 @@ def printBook(bookItem):
     print 'sdoubanRateSum:' + str(bookItem.doubanRateSum)
     print 'bookDesciption:' + str(bookItem.bookDescription)
     print 'authorDesciption:' + str(bookItem.authorDescription)
+    print 'labels:'
+    for label in bookItem.labels:
+        print label
     print 'sysuLibUrl:' + str(bookItem.sysuLibUrl)
     print '#############################'
 
@@ -107,7 +118,7 @@ def getTextList(content):
         pass
     return textList
 
-def getDoulist(doulist):
+def getDoulist(doulist, fileName):
     '''
     Get doulist through url and save the book in mysql
     '''
@@ -125,7 +136,7 @@ def getDoulist(doulist):
             #print item["href"]
             print "Get doulie item"
             print item['href']
-            getBookInf(item['href'])
+            getBookInf(item['href'], fileName = fileName)
 
     
 def writeText(txt, data):
@@ -141,8 +152,22 @@ def getDoulieId(url):
     print "doulieId:#####" + strs[-2]
     return strs[-2]
 
-def getBookInf(book, firstBook = False):
+def deleteQuote(rawText):
+    newText = ""
+    for sub in rawText:
+        if sub == "'" or sub == '"':
+            newText += '\\'
+        newText += sub
+    return newText
+
+def getSysuUrl(isbn):
+    url = "http://202.116.64.108:8991/F/-?func=find-b&request=" + str(isbn)
+    return url
+
+def getBookInf(book , fileName, firstBook = False):
     html = getHtml2(book)
+    if html == '':
+        return
     soup = BeautifulSoup(html)
     imgUrl = soup.find('img', src = re.compile("^https://"))['src']
 
@@ -151,10 +176,16 @@ def getBookInf(book, firstBook = False):
 
     bookInf = {}
     for y in range(0, len(textList), 2):
-        bookInf[textList[y]] = textList[y+1]
-    
-    bookInf['书名'] = soup.find('span', property = 'v:itemreviewed').text.strip().encode('UTF-8')
-    bookInf['imgUrl'] = imgUrl.encode('UTF-8')
+        try:
+            bookInf[textList[y]] = textList[y+1]
+        except:
+            return
+    try:
+        bookInf['书名'] = soup.find('span', property = 'v:itemreviewed').text.strip().encode('UTF-8')
+        bookInf['书名'] = deleteQuote(bookInf['书名'])
+        bookInf['imgUrl'] = imgUrl.encode('UTF-8')
+    except:
+        return
 
     try:
         bookInf['豆瓣评分'] = soup.find('strong').text.strip().encode('UTF-8')
@@ -166,10 +197,12 @@ def getBookInf(book, firstBook = False):
     intro = soup.find_all('div', class_ = 'intro')
     try:
         bookInf['内容简介'] = intro[0].text.strip().encode('UTF-8')
+        bookInf['内容简介'] = deleteQuote(bookInf['内容简介'])
     except:
         bookInf['内容简介'] = ''
     try:
         bookInf['作者简介'] = intro[1].text.strip().encode('UTF-8')
+        bookInf['作者简介'] = deleteQuote(bookInf['作者简介'])
     except:
         bookInf['作者简介'] = ''
     
@@ -179,13 +212,19 @@ def getBookInf(book, firstBook = False):
         bookInf['出版社'] = ''
     if not '作者' in bookInf:
         bookInf['作者'] = ''
+    bookInf['出版社'] = deleteQuote(bookInf['出版社'])
+    bookInf['作者'] = deleteQuote(bookInf['作者'])
 
     tags = soup.find_all('a', class_ = 'tag')
+    labels = list()
     #print "tags:"
-    #for tag in tags:
-        #print tag.string
-        #print type(tag.string)
-
+    for tag in tags:
+        tagStr = tag.string.encode('UTF-8')
+        tagStr = deleteQuote(tagStr)
+        labels.append(tagStr)
+    
+    if len(tags) == 0:
+        tags.append('None')
     bookItem = Book(name = bookInf['书名'],
                     imgUrl = bookInf['imgUrl'],
                     isbn = bookInf['ISBN'],
@@ -195,16 +234,21 @@ def getBookInf(book, firstBook = False):
                     doubanRateSum = bookInf['评分人数'],
                     bookDescription = bookInf['内容简介'],
                     authorDescription = bookInf['作者简介'],
-                    sysuLibUrl='',
-                    labels = tags)
+                    sysuLibUrl = getSysuUrl(bookInf['ISBN']),
+                    labels = labels)
     printBook(bookItem)
     if not bookSQL.isDup(bookItem.isbn):
-        bookid = bookSQL.saveBook(bookItem)
-        print "Saving" + str(bookid)
+        try:
+            bookid = bookSQL.saveBook(bookItem)
+            print "Saving" + str(bookid)
+        except:
+            return
     else:
-        bookid = bookSQL.getBookUid(bookItem.isbn)
-        print str(bookid) + "Has saved"
-    
+        try:
+            bookid = bookSQL.getBookUid(bookItem.isbn)
+            print str(bookid) + "Has saved"
+        except:
+            return
 
     if firstBook:
         print 'firstBook'
@@ -215,16 +259,14 @@ def getBookInf(book, firstBook = False):
             print doulie.isDoulieDup(doulieId)
             if doulie.isDoulieDup(doulieId):
                 continue
-            #else:
-            #    doulie.saveDoulieUid(doulieId)
             
-            writeText('doulist', str(bookid) + ':')
-            getDoulist(doulist['href'])
-            writeText('doulist', '\n')
+            writeText(fileName, str(bookid) + ':')
+            getDoulist(doulist['href'], fileName)
+            writeText(fileName, '\n')
             doulie.saveDoulieUid(doulieId)
     else:
         print "not first book"
-        writeText('doulist', str(bookid) + ',')
+        writeText(fileName, str(bookid) + ',')
     
     global bookNum
     bookNum += 1
@@ -280,6 +322,8 @@ def getTagInf(tag):
     index = 0
     while(1):
         html = getHtml2("https://book.douban.com/tag/" + tag + "?start=" + str(index*20))
+        if html == '':
+            break
         index = index + 1
         print 'index:' + str(index) + '###########'
         soup = BeautifulSoup(html)
@@ -289,7 +333,7 @@ def getTagInf(tag):
         for book in soup.find_all("a", href=re.compile("^https://book.douban.com/subject"), class_ = "nbg"):
             print book['href']
             bookUrlList.append(book['href'])
-            getBookInf(book['href'], firstBook = True)
+            getBookInf(book['href'], fileName = tag + '.list', firstBook = True)
 
 
 ##Search given tag and get book list
@@ -297,12 +341,27 @@ def searchTagList():
     tagList = getTagList()
     for tag in tagList:
         print '======================' + tag + '========================='
+
         getTagInf(tag)
 
 #Just for test
 def test():
     searchTagList()
 ###########################
-test()
-#getBookInf("https://book.douban.com/subject/25862578/", firstBook = True)
+
+#getBookInf('https://book.douban.com/subject/26652063/')
+#test()
+
+tagList = getTagList()
+#for tag in tagList:
+#    print tag
+pool = Pool(8) 
+pool.map(getTagInf, tagList)
+pool.close()
+pool.join()
+
+
+
+
+
 
