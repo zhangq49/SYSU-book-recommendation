@@ -4,7 +4,8 @@ from root import *
 
 class HomePageHandler(BaseHandler):
     def get(self):
-        try:
+        # try:
+        if True:
             cookie = super(HomePageHandler, self).get_current_user()
 
             books = book.getPopularBooks(quantityOfPopularBook)
@@ -22,8 +23,8 @@ class HomePageHandler(BaseHandler):
             	popularLabelList=popularLabelList,
             	
             	)
-        except:
-            self.write_error(404)
+        # except:
+        #     self.write_error(404)
 
 
     def post(self,):

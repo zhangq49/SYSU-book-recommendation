@@ -5,7 +5,8 @@ from root import *
 
 class BookHandler(BaseHandler):
     def get(self,id):
-        try:
+        # try:
+        if True:
             cookie = super(BookHandler, self).get_current_user()
             
             book.incBookViewCount(cookie, id)
@@ -35,8 +36,8 @@ class BookHandler(BaseHandler):
                 introduction=introduction, authorIntro=authorIntro,
                 sysuBookURL=sysuBookURL, relatedBookList=relatedBookList,
                     popularLabelList=popularLabelList, isbn=isbn, bookLabels=bookLabels)
-        except:
-            self.write_error(404)
+        # except:
+        #     self.write_error(404)
 
     def post(self):
         self.write_error(404)

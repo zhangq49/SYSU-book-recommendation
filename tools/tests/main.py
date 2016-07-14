@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 
 import os
 import sys
@@ -13,28 +13,34 @@ from modules.db.helper import book as bookHelper
 from modules.db.helper import doulie as doulieHelper
 
 def main():
-    print 'isDup'
-    print bookHelper.isDup('9787544270878'), 'true'
-    print bookHelper.isDup('9787544245555'), 'true'
-    print bookHelper.isDup('1823u42342342'), 'false'
+    # print 'isDup'
+    # print bookHelper.isDup('9787544270878'), 'true'
+    # print bookHelper.isDup('9787544245555'), 'true'
+    # print bookHelper.isDup('1823u42342342'), 'false'
 
     print 'saveBook'
     book = Book('testsavebook1', 'imgurl', 'isbn123423',
         'author', 'press', 10, 100, 'desc', 'authordesc', 'liburl',
         ['label2', 'dygw', 'label4', 'label5'])
-    # bookUid = bookHelper.saveBook(book)
-    # print 'bookUid', bookUid
+    book = Book('testsavebook2', 'imgurl', 'isbn123rrr',
+        'author', 'press', 7, 80, 'desc', 'authordesc', 'liburl',
+        [ 'dygw', 'label100', 'label5'])
+    book = Book('testsavebook3', 'imgurl', 'isbn12hrr',
+        'author', 'press', 6, 84, 'desc', 'authordesc', 'liburl',
+        [ u'小说小说',  u'小说', 'label5'])
+    bookUid = bookHelper.saveBook(book)
+    print 'bookUid', bookUid    
 
-    print 'isDoulieDup'
-    print doulieHelper.isDoulieDup('1'), 'true'
-    print doulieHelper.isDoulieDup(2), 'false'
+    # print 'isDoulieDup'
+    # print doulieHelper.isDoulieDup('1'), 'true'
+    # print doulieHelper.isDoulieDup(2), 'false'
 
-    print 'saveDoulieUid'
+    # print 'saveDoulieUid'
     # doulieHelper.saveDoulieUid('2')
     # doulieHelper.saveDoulieUid(3)
 
-    print 'getBookUid'
-    print bookHelper.getBookUid('isbn123423')
-    print bookHelper.getBookUid('i23')
+    # print 'getBookUid'
+    # print bookHelper.getBookUid('isbn123423')
+    # print bookHelper.getBookUid('i23')
 
 main()

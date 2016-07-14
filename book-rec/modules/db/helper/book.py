@@ -30,7 +30,7 @@ def getRecommendedBooks(userToken, cur, conn):
     '''
     sql = '''select recBooks from user where token = %s'''
     cur.execute(sql, userToken)
-    record = cur.fetchone()[0]
+    record = cur.fetchone()
     if not record:
         # If a user visited this site for the first time, no recommended
         # book exists.
@@ -75,17 +75,18 @@ def getBookDetail(bookUid, cur, conn):
 
 @mysqlConn
 def getRelevantBooks(bookUid, cur, conn):
-    sql = '''select relevantBooks from book where uid = %s'''
-    cur.execute(sql, bookUid)
-    record = cur.fetchone()[0]
-    bookUids = '(%s)' % record
-    sql = '''select uid, name, imgUrl from book where uid in %s''' % bookUids
-    num = cur.execute(sql)
-    records = cur.fetchmany(num)
-    books = []
-    for rec in records:
-        books.append(Book(rec[0], rec[1], rec[2]))
-    return books
+    # sql = '''select relevantBooks from book where uid = %s'''
+    # cur.execute(sql, bookUid)
+    # record = cur.fetchone()[0]
+    # bookUids = '(%s)' % record
+    # sql = '''select uid, name, imgUrl from book where uid in %s''' % bookUids
+    # num = cur.execute(sql)
+    # records = cur.fetchmany(num)
+    # books = []
+    # for rec in records:
+    #     books.append(Book(rec[0], rec[1], rec[2]))
+    # return books
+    return getPopularBooks(100)[90:]
 
 @mysqlConn
 def getBooksByLabel(labelName, page, size, order='doubanRateSum',

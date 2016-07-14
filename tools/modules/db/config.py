@@ -6,7 +6,7 @@ if DEV:
     HOST = 'localhost'
     PORT = 3306
     USER = 'root'
-    PASSWD = '123123'
+    PASSWD = 'admin123'
     DB = 'bookrec'
 
 
